@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List_AhongBOSS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f9f9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        li.completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+        .task-text {
+            flex-grow: 1;
+            margin-right: 10px;
+            word-break: break-word;
+        }
+        .task-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .edit-btn, .delete-btn {
+            width: 80px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>待辦事項</h1>
+        <input type="text" id="newTask" placeholder="輸入新的待辦事項">
+        <button onclick="addTask()">添加</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        // 添加新的待辦事項
+        function addTask() {
+            let taskInput = document.getElementById("newTask");
+            let taskValue = taskInput.value.trim();
+            if (taskValue === "") {
+                alert("請輸入待辦事項");
+                return;
+            }
+
+            // 創建新列表項目 (li)
+            let li = document.createElement("li");
+
+            // 創建待辦事項文字
+            let taskText = document.createElement("span");
+            taskText.textContent = taskValue;
+            taskText.className = "task-text";
+
+            // 創建編輯/保存按鈕
+            let editButton = document.createElement("button");
+            editButton.textContent = "編輯";
+            editButton.className = "edit-btn";
+            editButton.onclick = function() {
+                editTask(taskText, editButton);
+            };
+
+            // 創建刪除按鈕
+            let deleteButton = document.createElement("button");
+            deleteButton.textContent = "刪除";
+            deleteButton.className = "delete-btn";
+            deleteButton.onclick = function() {
+                deleteTask(li);
+            };
+
+            // 將文本和按鈕添加到列表項目
+            let taskButtons = document.createElement("div");
+            taskButtons.className = "task-buttons";
+            taskButtons.appendChild(editButton);
+            taskButtons.appendChild(deleteButton);
+
+            li.appendChild(taskText);
+            li.appendChild(taskButtons);
+
+            // 將列表項目添加到待辦事項列表中
+            document.getElementById("taskList").appendChild(li);
+
+            // 清空輸入框
+            taskInput.value = "";
+        }
+
+        let input;
+        // 編輯待辦事項
+        function editTask(taskText, editButton) {
+            if (editButton.textContent === "編輯") {
+                input = document.createElement("input");
+                input.type = "text";
+                input.value = taskText.textContent;
+                input.className = "task-text";
+                taskText.replaceWith(input);
+                editButton.textContent = "保存";
+            } else {
+                if (input && input.value.trim() !== "") {
+                    taskText.textContent = input.value.trim();
+                    input.replaceWith(taskText);
+                    editButton.textContent = "編輯";
+                    input = null;
+                } else {
+                    alert("輸入不能為空");
+                }
+            }
+        }
+
+        // 刪除待辦事項
+        function deleteTask(listItem) {
+            listItem.remove();
+        }
+    </script>
+</body>
+</html>
